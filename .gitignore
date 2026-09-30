@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest & testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+
+# Large temporary datasets (re-downloaded on demand by wfdb / synthetic generator)
+biosig_fuzzy_pso/data/.cache/*.npz
+!biosig_fuzzy_pso/data/.cache/.gitkeep
