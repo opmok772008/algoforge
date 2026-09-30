@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuzzy-Evolutionary ICU Arrhythmia Pipeline</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Montserrat:wght@600;700&display=swap">
+<style>
+:root{--bg:#1a1a1d;--pan:#26262a;--ink:#f7f4ef;--mute:#b8b1a6;--teal:#ff9900;--coral:#ff5468;--amber:#ffc266;--ok:#8fcf9a;--line:#3d3d43;--grid:#303036;--hero:#0a3a2f;--heroink:#f7f4ef;--herotr:#de6b48;--herop:#cfe0d6;--hg1:rgba(247,244,239,.20);--hg2:rgba(247,244,239,.08);--pritx:#1a1a1d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#f7f4ef;--pan:#ece6db;--ink:#1a1a1d;--mute:#5b5850;--teal:#b8001f;--coral:#b8001f;--amber:#a35f00;--ok:#2f6b3a;--line:#d6cdbd;--grid:#e2dacb;--hero:#0a3a2f;--heroink:#f7f4ef;--herotr:#de6b48;--herop:#cfe0d6;--hg1:rgba(222,107,72,.22);--hg2:rgba(222,107,72,.08);--pritx:#f7f4ef}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;line-height:1.05;margin:0}
+h1{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.12;font-size:clamp(2rem,5vw,3.6rem);max-width:18ch}
+h2{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.15;font-size:clamp(2.1rem,4.4vw,3rem);margin-bottom:.75rem}
+h3{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1.08rem;margin:0 0 .25rem;font-weight:600}
+p{margin:0 0 1rem;max-width:66ch}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.hero{background:var(--hero);color:var(--heroink);padding:26px 0 48px;background-image:linear-gradient(var(--hg1) 1px,transparent 1px),linear-gradient(90deg,var(--hg1) 1px,transparent 1px),linear-gradient(var(--hg2) 1px,transparent 1px),linear-gradient(90deg,var(--hg2) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px}
+.hero p{color:var(--herop)}
+.strip{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font:500 .8rem/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:22px;color:var(--heroink)}
+.cross{width:22px;height:22px;border-radius:4px;background:#f7f4ef;position:relative;flex:none}
+.cross:before,.cross:after{content:"";position:absolute;background:#de6b48;border-radius:1px}
+.cross:before{left:7px;top:2px;width:4px;height:14px}.cross:after{left:2px;top:7px;width:14px;height:4px}
+.live{display:inline-flex;gap:7px;align-items:center;color:var(--herotr)}
+.live i{width:9px;height:9px;border-radius:50%;background:var(--herotr);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.ecgline{display:block;width:100%;height:80px;margin-top:30px;overflow:visible}
+.ecgline path{fill:none;stroke:var(--herotr);stroke-width:2.4;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:sweep 5s linear infinite;filter:drop-shadow(0 0 2px var(--herotr))}
+@keyframes sweep{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.ecgline path{animation:none;stroke-dashoffset:0}.live i{animation:none}}
+
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:.93rem;margin-bottom:44px}
+nav a{color:var(--heroink);text-decoration:none;border-bottom:1px solid transparent}
+nav a:hover,nav a:focus-visible{border-color:var(--herotr);outline:none}
+nav button{margin-left:auto}
+button,.seg span{font:inherit;font-size:.92rem}
+button{cursor:pointer;background:transparent;color:inherit;border:1px solid currentColor;border-radius:999px;padding:7px 16px}
+button.pri{background:var(--teal);color:var(--bg);border-color:var(--teal);font-weight:600}
+button.pri{color:var(--pritx)}
+button:focus-visible,input:focus-visible+span{outline:3px solid var(--amber);outline-offset:2px}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.panel{background:var(--pan);border:1px solid var(--line);border-radius:10px;padding:18px}
+.grid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-top:22px}
+canvas{display:block;width:100%;height:120px;background:var(--pan)}
+.tr{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;border-radius:6px;border:1px solid var(--line);margin:6px 0 12px}
+.cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.86rem;color:var(--mute)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.seg{position:relative}.seg input{position:absolute;opacity:0}
+.seg span{display:inline-block;cursor:pointer;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg)}
+.seg input:checked+span{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.banner{border-radius:8px;padding:12px 14px;font-weight:600;border:2px solid var(--ok);color:var(--ok)}
+.banner.alarm{border-color:var(--coral);color:var(--coral);background:rgba(255,240,200,.14)}
+.banner.hold{border-color:var(--amber);color:var(--amber)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stats div{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.stats small{display:block;color:var(--mute);font-size:.78rem}
+.stats b,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:1.25rem}
+.bar{height:10px;border-radius:5px;background:var(--grid);overflow:hidden;margin:4px 0 9px}
+.bar i{display:block;height:100%;width:calc(var(--v,0)*100%);background:var(--teal);transition:width .15s}
+.bar.r i{background:var(--coral)}
+.lbl{display:flex;justify-content:space-between;font-size:.86rem}
+.lat{position:relative}.lat em{position:absolute;right:0;top:-2px;height:14px;border-right:2px dashed var(--coral)}
+.note{font-size:.84rem;color:var(--mute);max-width:none}
+pre.noscroll{scrollbar-width:none;-ms-overflow-style:none}pre.noscroll::-webkit-scrollbar{display:none}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font:.82rem/1.5 "IBM Plex Mono",ui-monospace,monospace;overflow:auto;max-height:190px;margin:10px 0 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tw{overflow-x:auto}.tw table{min-width:520px}
+.pass{color:var(--ok);font-weight:600}.fail{color:var(--coral);font-weight:600}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink)}
+ol.steps li{counter-increment:s;padding:14px 14px 0 0}
+ol.steps li::before{content:counter(s);display:block;font:2rem/1 "Instrument Serif",Georgia,serif;color:var(--coral)}
+ol.steps p{font-size:.93rem;color:var(--mute);margin:0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.lim{border-left:3px solid var(--coral);padding-left:14px;margin:0 0 14px}.lim p{margin:0;color:var(--mute);font-size:.95rem}
+footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
+@media (max-width:820px){.grid,.cols{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr 1fr}.stats b{font-size:1.05rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<nav aria-label="Sections"><a href="#lab">Live lab</a><a href="#ecgrepo">Repo pipeline</a><a href="#upload">Upload</a><a href="#evolve">Evolution</a><a href="#tests">Tests</a></nav>
+<h1>Lethal arrhythmias, found through the noise</h1>
+<p style="font-size:1.12rem;margin-top:16px">A fuzzy-logic pipeline for ICU monitoring whose settings are tuned by an evolutionary algorithm. Everything below runs live in your browser on synthetic ECG, and the numbers come from real computation, not animation.</p>
+<svg class="ecgline" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 40 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20"/></svg>
+</div></header>
+
+<section id="lab"><div class="wrap">
+<h2>Live monitor</h2>
+<p>Pick a rhythm, add interference, and watch the pipeline clean the signal, find beats and decide whether to alarm. Fuzzy rules combine heart rate, rhythm regularity and signal quality.</p>
+<div class="grid">
+<div class="panel">
+<div class="ctl" role="radiogroup" aria-label="Rhythm">
+<label class="seg"><input type="radio" name="scn" value="normal" checked><span>Normal rhythm</span></label>
+<label class="seg"><input type="radio" name="scn" value="vt"><span>Ventricular tachycardia</span></label>
+<label class="seg"><input type="radio" name="scn" value="vf"><span>Ventricular fibrillation</span></label></div>
+<div class="ctl" aria-label="Interference">
+<label class="seg"><input type="checkbox" data-k="wander"><span>Baseline wander</span></label>
+<label class="seg"><input type="checkbox" data-k="motion"><span>Motion artifact</span></label>
+<label class="seg"><input type="checkbox" data-k="emg"><span>Severe EMG burst</span></label></div>
+<div class="cap"><span>Raw sensor (last 4 s)</span><span>Amplitude in mV</span></div>
+<div class="tr"><canvas id="cRaw" aria-label="Raw ECG trace"></canvas></div>
+<div class="cap"><span>Cleaned, with detected R-peaks</span><span>Filtered at 250 Hz</span></div>
+<div class="tr"><canvas id="cClean" aria-label="Cleaned ECG trace with R-peak markers"></canvas></div>
+<p class="note">Synthetic ECG with known beat times, so the accuracy figures on this page are measurable. Not a medical device.</p>
+</div>
+<div class="panel">
+<div id="banner" class="banner" role="status" aria-live="polite">Analyzing</div>
+<div class="stats"><div><small>Heart rate</small><b id="hr">--</b></div><div><small>Signal quality</small><b id="sq">--</b></div><div><small>Alarm latency</small><b id="lt">--</b></div></div>
+<div class="lbl"><span>Alert speed budget</span><span>3 s limit</span></div>
+<div class="bar lat" id="latBar"><i></i></div>
+<h3 style="margin-top:14px">Fuzzy inference</h3>
+<div id="fz"></div>
+</div>
+</div></div></section>
+
+<section id="ecgrepo"><div class="wrap">
+<h2>Repo pipeline: RR-feature ECG analyzer</h2>
+<ul style="margin:0 0 1rem;padding-left:1.2rem;max-width:66ch">
+<li>Choose a signal type (normal, atrial fibrillation, other rhythm, bradycardia or tachycardia) to generate a fresh 10-second ECG.</li>
+<li>R-peaks are detected automatically and marked as dots on the trace.</li>
+<li>Shows heart rate, average RR interval, HRV (SDNN), RMSSD and NN50.</li>
+<li>Classifies heart rate as bradycardia, normal or tachycardia.</li>
+<li>Labels the rhythm from beat-to-beat irregularity and suggests a next step.</li>
+</ul>
+<div class="panel">
+<div class="ctl" role="radiogroup" aria-label="Signal type">
+<label class="seg"><input type="radio" name="rp" value="N" checked><span>Normal (N)</span></label>
+<label class="seg"><input type="radio" name="rp" value="A"><span>Atrial fibrillation (A)</span></label>
+<label class="seg"><input type="radio" name="rp" value="O"><span>Other rhythm (O)</span></label>
+<label class="seg"><input type="radio" name="rp" value="B"><span>Bradycardia</span></label>
+<label class="seg"><input type="radio" name="rp" value="T"><span>Tachycardia</span></label>
+<button id="rpgen" class="pri" type="button">New signal</button>
+
+</div>
+<canvas id="rpcv" height="160" style="height:160px;margin-top:12px" aria-label="ECG with detected R peaks"></canvas>
+<div id="rpout" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px"></div>
+<p id="rpadv" style="margin:14px 0 0;font-weight:600"></p>
+</div></div></section>
+
+<section id="upload"><div class="wrap">
+<h2>Upload your ECG</h2>
+<p>Drop a CSV or TXT file with one ECG lead as a column of numbers. The file is analyzed in your browser and never uploaded anywhere. Set the sampling rate of your recording (PhysioNet 2017 uses 300 Hz). The first 30 seconds are analyzed.</p>
+<div class="panel">
+<div id="upz" tabindex="0" role="button" aria-label="Choose or drop an ECG file" style="border:2px dashed var(--line);border-radius:10px;padding:26px;text-align:center;cursor:pointer">Drop a .csv / .txt file here, or click to choose<input type="file" id="upf" accept=".csv,.txt,.tsv" hidden></div>
+<div class="ctl" style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+<label>Sampling rate (Hz) <input id="upfs" type="number" min="50" max="2000" value="300" style="width:90px;font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"></label>
+<label>Column <select id="upcol" style="font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)"><option>Load a file first</option></select></label>
+<button id="upgo" class="pri" type="button">Analyze</button>
+<span id="upmsg" style="color:var(--mute)" role="status"></span></div>
+<canvas id="upcv" style="height:160px;margin-top:12px;display:none" aria-label="Uploaded ECG with detected R peaks"></canvas>
+<div id="upout" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px"></div>
+<p id="upadv" style="margin:14px 0 0;font-weight:600"></p>
+</div></div></section>
+<section id="evolve"><div class="wrap">
+<h2>Evolution lab</h2>
+<p>A genetic algorithm searches four detector settings (baseline window, smoothing, threshold, integration window) on three noisy training records. Fitness is F1 score minus a penalty for R-peak timing jitter. Elitism keeps the best solution each generation.</p>
+<div class="grid" style="grid-template-columns:1fr 1fr">
+<div class="panel"><div class="ctl"><button class="pri" id="go" type="button">Run evolution</button><button id="apply" type="button" disabled>Apply best to monitor</button></div>
+<div class="tr"><canvas id="cGA" aria-label="Fitness by generation chart" style="height:150px"></canvas></div>
+<div class="cap"><span>Best fitness (solid), population mean (dashed)</span><span>Generations 0 to 20</span></div></div>
+<div class="panel"><h3>Run log</h3><pre id="log" aria-live="off">Press Run evolution to start. Attempt 1 uses the default settings: bw=200 sm=5 th=0.30 mw=25.</pre></div>
+</div></div></section>
+
+<section id="tests"><div class="wrap">
+<h2>Automated test suite</h2>
+<p>Each check is a real assertion on generated signals with fixed random seeds, so results repeat exactly. They mirror the hard constraints in the challenge brief.</p>
+<div class="ctl"><button class="pri" id="rt" type="button">Run all tests</button><span id="sum" class="mono" style="font-size:1rem;align-self:center"></span></div>
+<div class="tw"><table><thead><tr><th>Check</th><th>Result</th><th>Measured</th></tr></thead><tbody id="tb"></tbody></table></div>
+</div></section>
+
+<footer><div class="wrap">Data sources are cited from PhysioNet. This is a research prototype on synthetic signals and is not a medical device.</div></footer>
+
+<script>
+/*CORE*/
+var FS=250,N=1500,WIN=1000,DEF={bw:200,sm:5,th:.3,mw:25};
+function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function gs(x,m,s,a){return a*Math.exp(-((x-m)*(x-m))/(2*s*s))}
+function Sim(seed){this.R=rng(seed);this.ph=0;this.rr=.85;this.t=0;this.vp=0;this.i=0;this.rs=[]}
+Sim.prototype.next=function(o){var R=this.R,t=(this.t+=1/FS),x,i=this.i++,T=6.283;
+if(o.scn==="vf"){var f=5+1.2*Math.sin(T*.3*t)+.6*Math.sin(T*.83*t);this.vp+=T*f/FS;x=(.7+.3*Math.sin(T*.9*t))*Math.sin(this.vp)+.3*Math.sin(1.7*this.vp+1)}
+else{var vt=o.scn==="vt",pv=this.ph,pk=vt?.35:.385;this.ph+=1/(FS*this.rr);
+if(this.ph>=1){this.ph-=1;this.rr=vt?.33+R()*.02:.85+R()*.06}
+var p=this.ph;if(pv<pk&&p>=pk)this.rs.push(i);
+x=vt?gs(p,.35,.05,1)+gs(p,.7,.07,-.45):gs(p,.16,.025,.12)+gs(p,.36,.008,-.15)+gs(p,.385,.011,1)+gs(p,.41,.009,-.25)+gs(p,.62,.045,.3)}
+if(o.wander)x+=.8*Math.sin(T*.25*t)+.4*Math.sin(T*.11*t+1);
+if(o.motion){var e=Math.sin(T*.2*t);x+=1.2*e*e*Math.sin(T*2.2*t)}
+return x+(R()-.5)*(o.emg?.9:.03)};
+function ma(x,w){var n=x.length,c=new Float64Array(n+1),o=new Float32Array(n),h=w>>1,i;for(i=0;i<n;i++)c[i+1]=c[i]+x[i];
+for(i=0;i<n;i++){var a=Math.max(0,i-h),b=Math.min(n,i+h+1);o[i]=(c[b]-c[a])/(b-a)}return o}
+function clean(x,p){var b=ma(x,p.bw),y=new Float32Array(x.length);for(var i=0;i<x.length;i++)y[i]=x[i]-b[i];return y}
+function pct(a,q){var s=Float32Array.from(a).sort();return s[Math.min(s.length-1,Math.floor(s.length*q))]}
+function detect(y,p){var n=y.length,s=ma(y,p.sm),e=new Float32Array(n),i;
+for(i=2;i<n;i++){var d=s[i]-s[i-2];e[i]=d*d}e=ma(e,p.mw);
+var thr=Math.max(p.th*pct(e,.97),2.5*pct(e,.5)),pk=[],last=-99;
+for(i=1;i<n-1;i++)if(e[i]>thr&&e[i]>=e[i-1]&&e[i]>e[i+1]){var a=Math.max(0,i-15),b=Math.min(n-1,i+15),bi=a;
+for(var j=a;j<=b;j++)if(s[j]>s[bi])bi=j;if(bi-last>.2*FS){pk.push(bi);last=bi}}
+return{pk:pk}}
+function quality(y){var d=new Float32Array(y.length-2),i,a=new Float32Array(y.length);
+for(i=2;i<y.length;i++)d[i-2]=Math.abs(y[i]-2*y[i-1]+y[i-2]);for(i=0;i<y.length;i++)a[i]=Math.abs(y[i]);
+var sg=pct(d,.5)/1.652+1e-6,r=pct(a,.98)/sg;return Math.max(0,Math.min(1,(Math.log10(r)-.4)/.9))}
+function trap(x,a,b,c,d){return Math.max(0,Math.min((x-a)/(b-a),1,(d-x)/(d-c)))}
+function fuzzy(hr,cv,q){var m={hrHigh:0,hrVery:0,regular:0,irregular:0,good:trap(q,.35,.6,1,1.01),poor:trap(q,-1,-.5,.25,.5)};
+if(hr!==null){m.hrHigh=trap(hr,110,150,400,401);m.hrVery=trap(hr,180,230,400,401);m.regular=trap(cv,-1,-.5,.12,.3);m.irregular=trap(cv,.15,.35,5,6)}
+var vt=Math.min(m.hrHigh,m.regular),vf=Math.min(m.hrVery,m.good),noise=Math.min(m.poor,m.irregular),conf=Math.max(vt,vf);
+return{hr:hr,cv:cv,q:q,m:m,vt:vt,vf:vf,noise:noise,conf:conf,alarm:conf>=.6&&noise<.5,hold:conf<.6&&noise>=.5||(hr===null?false:m.poor>.5&&conf<.6)}}
+function analyze(x,p){var y=clean(x,p),d=detect(y,p),q=quality(y),n=d.pk.length,hr=null,cv=null;
+if(n>=6){var rr=[],i,s=0;for(i=n-5;i<n;i++){rr.push((d.pk[i]-d.pk[i-1])/FS);s+=rr[rr.length-1]}
+var mu=s/5,v=0;rr.forEach(function(r){v+=(r-mu)*(r-mu)});cv=Math.sqrt(v/5)/mu;rr.sort();hr=60/rr[2]}
+return{y:y,pk:d.pk,st:fuzzy(hr,cv,q)}}
+function Monitor(seed,p){this.sim=new Sim(seed);this.p=p||DEF;this.buf=new Float32Array(N);this.o={scn:"normal",wander:false,emg:false,motion:false};
+this.acc=0;this.onset=null;this.alarmAt=null;this.y=new Float32Array(WIN);this.pk=[];this.st=fuzzy(null,null,1)}
+Monitor.prototype.set=function(k,v){if(k==="scn"&&v!==this.o.scn){this.onset=v==="normal"?null:this.sim.t;this.alarmAt=null}this.o[k]=v};
+Monitor.prototype.step=function(k){var b=this.buf,i;b.copyWithin(0,k);for(i=N-k;i<N;i++)b[i]=this.sim.next(this.o);
+this.acc+=k;if(this.acc>=25){this.acc=0;var r=analyze(b.subarray(N-WIN),this.p);this.y=r.y;this.pk=r.pk;this.st=r.st;
+if(r.st.alarm&&this.onset!==null&&this.alarmAt===null)this.alarmAt=this.sim.t}};
+Monitor.prototype.run=function(s){for(var i=0;i<s*FS/25;i++)this.step(25)};
+Monitor.prototype.latency=function(){return this.alarmAt===null?null:this.alarmAt-this.onset};
+function record(seed,secs,o){var s=new Sim(seed),x=new Float32Array(secs*FS);for(var i=0;i<x.length;i++)x[i]=s.next(o);return{x:x,truth:s.rs}}
+function score(rec,p){var y=clean(rec.x,p),d=detect(y,p),n=y.length,tp=0,js=0,used={},pk=d.pk.filter(function(q){return q>40&&q<n-40}),tr=rec.truth.filter(function(q){return q>40&&q<n-40});
+pk.forEach(function(q){var b=-1,bd=11;tr.forEach(function(t,k){var dd=Math.abs(t-q);if(dd<bd&&!used[k]){bd=dd;b=k}});if(b>=0){used[b]=1;tp++;js+=bd}});
+var fp=pk.length-tp,fn=tr.length-tp;return{se:tp/(tp+fn||1),ppv:tp/(tp+fp||1),jit:tp?js/tp*1000/FS:0}}
+var BND={bw:[50,500],sm:[1,15],th:[.05,.9],mw:[8,50]},TRAIN=null;
+function trainSet(){return TRAIN=TRAIN||[record(11,10,{scn:"normal",wander:true}),record(12,10,{scn:"normal",emg:true}),record(13,10,{scn:"normal",wander:true,motion:true,emg:true})]}
+function fitness(p){var s=0,j=0;trainSet().forEach(function(r){var m=score(r,p);s+=2*m.se*m.ppv/(m.se+m.ppv||1);j+=m.jit});return s/3-.005*j/3}
+function GA(seed){this.R=rng(seed);this.g=0;var me=this;this.pop=[];for(var i=0;i<14;i++)this.pop.push(this.rand());this.ev()}
+GA.prototype.rand=function(){var p={};for(var k in BND)p[k]=BND[k][0]+this.R()*(BND[k][1]-BND[k][0]);p.bw=Math.round(p.bw);p.sm=Math.round(p.sm);p.mw=Math.round(p.mw);return p};
+GA.prototype.ev=function(){this.pop.forEach(function(p){p.f=fitness(p)});this.pop.sort(function(a,b){return b.f-a.f});
+this.best=this.pop[0];this.mean=this.pop.reduce(function(s,p){return s+p.f},0)/this.pop.length};
+GA.prototype.step=function(){var me=this,R=this.R,nx=[this.pop[0]];
+function pick(){var a=me.pop[Math.floor(R()*14)],b=me.pop[Math.floor(R()*14)];return a.f>b.f?a:b}
+while(nx.length<14){var a=pick(),b=pick(),c={};for(var k in BND){var w=R(),v=w*a[k]+(1-w)*b[k];if(R()<.3)v+=(R()-.5)*.3*(BND[k][1]-BND[k][0]);c[k]=Math.min(BND[k][1],Math.max(BND[k][0],v))}
+c.bw=Math.round(c.bw);c.sm=Math.round(c.sm);c.mw=Math.round(c.mw);nx.push(c)}
+this.pop=nx;this.g++;this.ev()};
+function runTests(){var T=[],p=DEF;function t(n,ok,v){T.push({name:n,ok:!!ok,val:v})}
+var c=score(record(21,30,{scn:"normal"}),p);t("Clean rhythm: sensitivity and precision at least 95%",c.se>=.95&&c.ppv>=.95,"Se "+(c.se*100).toFixed(1)+"%, PPV "+(c.ppv*100).toFixed(1)+"%");
+var w=score(record(22,30,{scn:"normal",wander:true}),p);t("R-peak timing jitter under baseline wander is at most 20 ms",w.jit<=20,w.jit.toFixed(1)+" ms");
+var r=record(23,20,{scn:"normal",wander:true}),y=clean(r.x,p),a=0,k=0;r.truth.forEach(function(q){if(q>60&&q<y.length-60){a+=y[q];k++}});
+t("QRS amplitude preserved after filtering (at least 85% of true 1.0 mV)",a/k>=.85,(a/k).toFixed(2)+" mV");
+["vt","vf"].forEach(function(s){var m=new Monitor(31,p);m.set("wander",true);m.run(10);m.set("scn",s);m.run(6);var L=m.latency();
+t((s==="vt"?"Ventricular tachycardia":"Ventricular fibrillation")+" alert within 3 seconds",L!==null&&L<=3,L===null?"no alert":L.toFixed(1)+" s")});
+var m=new Monitor(32,p);m.set("emg",true);m.run(8);var bad=0;for(var i=0;i<20*FS/25;i++){m.step(25);if(m.st.alarm)bad++}
+t("Normal rhythm with severe EMG burst raises no lethal alarm",bad===0,bad+" false alarm windows in 20 s");
+var g=[100,130,150,180,220].map(function(h){return fuzzy(h,.05,.9).conf});t("Fuzzy alarm confidence never decreases as heart rate rises",g.every(function(v,i){return i===0||v>=g[i-1]}),g.map(function(v){return v.toFixed(2)}).join(" "));
+var q=new Monitor(33,p);q.run(60);t("Streaming buffer stays fixed at "+N+" samples (6 KB) over 60 s",q.buf.length===N,q.buf.byteLength+" bytes");
+var ga=new GA(5),f0=ga.best.f;for(var j=0;j<12;j++)ga.step();t("Evolution never loses fitness (elitism) over 12 generations",ga.best.f>=f0,f0.toFixed(3)+" to "+ga.best.f.toFixed(3));
+return T}
+/*ENDCORE*/
+
+(function(){
+var $=function(i){return document.getElementById(i)},mon=new Monitor(7),reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+var fzRows=[["Heart rate high","hrHigh"],["Heart rate very high","hrVery"],["Rhythm regular","regular"],["Rhythm irregular","irregular"],["Signal good","good"],["Signal poor","poor"],["Rule: fast and regular (VT)","vt"],["Rule: very fast, good signal (VF)","vf"],["Rule: poor and irregular (noise)","noise"],["Alarm confidence","conf"]];
+$("fz").innerHTML=fzRows.map(function(r,i){return '<div class="lbl"><span>'+r[0]+'</span><span id="fv'+i+'" class="mono" style="font-size:.85rem"></span></div><div class="bar'+(i>5?" r":"")+'"><i id="fb'+i+'"></i></div>'}).join("");
+function draw(cv,a,lo,hi,col,pk){var d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;if(cv.width!==Math.round(w*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d)}
+var x=cv.getContext("2d");x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.strokeStyle=col;x.lineWidth=1.7;x.lineJoin="round";x.beginPath();
+var n=a.length,Y=function(v){return h-(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*h};for(var i=0;i<n;i++){var px=i/(n-1)*w;i?x.lineTo(px,Y(a[i])):x.moveTo(px,Y(a[i]))}x.stroke();
+if(pk){x.fillStyle=cssv("--coral");pk.forEach(function(p){x.beginPath();x.arc(p/(n-1)*w,Y(a[p]),4,0,6.3);x.fill()})}}
+function render(){var s=mon.st,b=$("banner"),m=s.m;
+draw($("cRaw"),mon.buf.subarray(N-WIN),-2.6,2.6,cssv("--mute"));draw($("cClean"),mon.y,-1.2,1.6,cssv("--teal"),mon.pk);
+$("hr").textContent=s.hr===null?"--":Math.round(s.hr);$("sq").textContent=Math.round(s.q*100)+"%";var L=mon.latency();$("lt").textContent=L===null?"--":L.toFixed(1)+" s";
+$("latBar").firstChild.style.setProperty("--v",L===null?0:Math.min(1,L/3));
+var v={hrHigh:m.hrHigh,hrVery:m.hrVery,regular:m.regular,irregular:m.irregular,good:m.good,poor:m.poor,vt:s.vt,vf:s.vf,noise:s.noise,conf:s.conf};
+fzRows.forEach(function(r,i){$("fv"+i).textContent=v[r[1]].toFixed(2);$("fb"+i).style.setProperty("--v",v[r[1]])});
+var t,c="banner";if(s.alarm){t="LETHAL ARRHYTHMIA ALERT: "+(mon.o.scn==="vf"?"ventricular fibrillation pattern":"sustained fast regular rhythm");c+=" alarm"}
+else if(s.hr===null){t="Analyzing the signal"}else if(s.hold){t="Signal check: interference detected, no lethal pattern confirmed";c+=" hold"}else t="Rhythm within normal limits";
+b.className=c;if(b.textContent!==t)b.textContent=t}
+function adv(sec){mon.run(sec);render()}
+var last=0,acc=0;function loop(ts){var dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt*FS;var k=Math.floor(acc);if(k>0){acc-=k;mon.step(k);render()}requestAnimationFrame(loop)}
+document.querySelectorAll('input[name="scn"]').forEach(function(e){e.addEventListener("change",function(){mon.set("scn",e.value);if(reduce)adv(6)})});
+document.querySelectorAll("input[data-k]").forEach(function(e){e.addEventListener("change",function(){mon.set(e.dataset.k,e.checked);if(reduce)adv(6)})});
+mon.run(8);render();if(!reduce)requestAnimationFrame(loop);addEventListener("resize",render);
+;
+/* evolution */
+var ga=null,hist=[],bestP=null;
+function gaDraw(){var cv=$("cGA");if(!hist.length){draw(cv,[0,0],0,1,cssv("--mute"));return}
+var d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=Math.round(w*d);cv.height=Math.round(h*d);var x=cv.getContext("2d");x.setTransform(d,0,0,d,0,0);
+var lo=Math.min.apply(null,hist.map(function(q){return q.mean}))-.03,hi=1,Y=function(v){return h-8-(v-lo)/(hi-lo)*(h-16)},X=function(i){return 10+i/20*(w-20)};
+[["mean",[5,4],cssv("--mute")],["best",[],cssv("--teal")]].forEach(function(s){x.setLineDash(s[1]);x.strokeStyle=s[2];x.lineWidth=2.2;x.beginPath();hist.forEach(function(q,i){i?x.lineTo(X(i),Y(q[s[0]])):x.moveTo(X(i),Y(q[s[0]]))});x.stroke()});x.setLineDash([])}
+function fp(p){return"bw="+p.bw+" sm="+p.sm+" th="+p.th.toFixed(2)+" mw="+p.mw}
+$("go").onclick=function(){var lg=$("log");lg.classList.add("noscroll");ga=new GA(3);hist=[{best:ga.best.f,mean:ga.mean}];lg.textContent="Attempt 1 (default settings) fitness "+fitness(DEF).toFixed(3)+"\ngen 00  best "+ga.best.f.toFixed(3)+"  "+fp(ga.best);gaDraw();$("go").disabled=true;
+(function tick(){if(ga.g>=20){bestP=ga.best;var f=fitness(DEF);lg.textContent+="\nAttempt 2 note: evolved settings raised fitness from "+f.toFixed(3)+" to "+ga.best.f.toFixed(3)+" by re-balancing threshold and smoothing against noisy records.";$("go").disabled=false;$("apply").disabled=false;lg.scrollTop=lg.scrollHeight;return}
+var pb=ga.best.f;ga.step();hist.push({best:ga.best.f,mean:ga.mean});lg.textContent+="\ngen "+(ga.g<10?"0":"")+ga.g+"  best "+ga.best.f.toFixed(3)+" ("+(ga.best.f>=pb?"+":"")+(ga.best.f-pb).toFixed(3)+")  "+fp(ga.best);lg.scrollTop=lg.scrollHeight;gaDraw();setTimeout(tick,reduce?0:70)})()};
+$("apply").onclick=function(){mon.p={bw:bestP.bw,sm:bestP.sm,th:bestP.th,mw:bestP.mw};$("log").textContent+="\nApplied to live monitor: "+fp(mon.p);if(reduce)adv(4)};
+gaDraw();
+/* tests */
+function tests(){var R=runTests(),ok=R.filter(function(r){return r.ok}).length;
+$("tb").innerHTML=R.map(function(r){return"<tr><td>"+r.name+'</td><td class="'+(r.ok?"pass":"fail")+'">'+(r.ok?"Pass":"Fail")+"</td><td>"+r.val+"</td></tr>"}).join("");$("sum").textContent=ok+" / "+R.length+" passed"}
+$("rt").onclick=tests;setTimeout(tests,50);
+})();
+(function(){
+var FS=300,cv=document.getElementById('rpcv'),ctx=cv.getContext('2d'),sig=null,pk=[];
+function rnd(){return Math.random()}
+function gauss(){return (rnd()+rnd()+rnd()+rnd()-2)*1.7}
+function beat(t,c,a){return a*Math.exp(-Math.pow((t-c)/.012,2))}
+function synth(type){
+ var n=FS*10,x=new Array(n).fill(0),t=0.4,hr={N:72,A:88,O:70,B:48,T:125}[type],k=0,ts=[];
+ while(t<10){ts.push(t);var rr=60/hr;
+  if(type==='N'||type==='B'||type==='T')rr*=1+.03*gauss();
+  else if(type==='A')rr*=.55+.9*rnd();
+  else rr*=(k%5===3)?.6:(k%5===4?1.35:1+.04*gauss());
+  t+=rr;k++}
+ for(var i=0;i<n;i++){var s=i/FS,v=.03*Math.sin(2*Math.PI*.3*s)+.02*gauss();
+  if(type==='A')v+=.03*Math.sin(2*Math.PI*6*s+k);
+  x[i]=v}
+ ts.forEach(function(b){for(var i=Math.max(0,(b-.4)*FS|0);i<Math.min(n,(b+.5)*FS|0);i++){var s=i/FS;
+  x[i]+=beat(s,b,1)-beat(s,b-.025,.12)-beat(s,b+.025,.15);
+  if(type!=='A')x[i]+=beat(s,b-.16,.12)*0+.1*Math.exp(-Math.pow((s-(b-.16))/.03,2));
+  x[i]+=.25*Math.exp(-Math.pow((s-(b+.25))/.05,2))}});
+ return x}
+function mavg(x,w){var o=[],s=0,h=w>>1;for(var i=0;i<x.length;i++){var a=Math.max(0,i-h),b=Math.min(x.length-1,i+h),m=0;for(var j=a;j<=b;j++)m+=x[j];o.push(m/(b-a+1))}return o}
+function analyze(x,fs){fs=fs||FS;
+ var base=mavg(x,fs),y=x.map(function(v,i){return v-base[i]}),h=mavg(y,5),mx=Math.max.apply(null,h),th=.45*mx,p=[],last=-1e9;
+ for(var i=1;i<h.length-1;i++)if(h[i]>h[i-1]&&h[i]>h[i+1]&&h[i]>th&&i-last>.25*fs){p.push(i);last=i}
+ var rr=[];for(i=1;i<p.length;i++)rr.push((p[i]-p[i-1])/fs);
+ var m=rr.reduce(function(a,b){return a+b},0)/(rr.length||1),sd=Math.sqrt(rr.reduce(function(a,b){return a+(b-m)*(b-m)},0)/(rr.length||1)),
+ d=rr.slice(1).map(function(v,i){return v-rr[i]}),rms=Math.sqrt(d.reduce(function(a,b){return a+b*b},0)/(d.length||1)),
+ nn50=d.filter(function(v){return Math.abs(v)>.05}).length,hr=m?60/m:0,cv=m?sd/m:0;
+ return {p:p,y:h,rr:rr,hr:hr,m:m,sd:sd,rms:rms,nn50:nn50,cv:cv}}
+window.ecgAnalyze=analyze;
+function fmt(v,u,d){return v.toFixed(d===undefined?2:d)+(u||'')}
+function render(){
+ var r=analyze(sig);pk=r.p;var w=cv.clientWidth,h=160;cv.width=w*devicePixelRatio;cv.height=h*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+ var st=getComputedStyle(document.documentElement),ink=st.getPropertyValue('--ink'),teal=st.getPropertyValue('--teal'),co=st.getPropertyValue('--coral'),ln=st.getPropertyValue('--grid');
+ ctx.clearRect(0,0,w,h);ctx.strokeStyle=ln;for(var g=0;g<w;g+=30){ctx.beginPath();ctx.moveTo(g,0);ctx.lineTo(g,h);ctx.stroke()}
+ var n=Math.min(sig.length,FS*10),mn=Math.min.apply(null,r.y),mx=Math.max.apply(null,r.y);
+ function X(i){return i/n*w}function Y(v){return h-8-(v-mn)/(mx-mn||1)*(h-16)}
+ ctx.strokeStyle=teal;ctx.lineWidth=1.4;ctx.beginPath();for(var i=0;i<n;i++){i?ctx.lineTo(X(i),Y(r.y[i])):ctx.moveTo(X(i),Y(r.y[i]))}ctx.stroke();
+ ctx.fillStyle=co;r.p.forEach(function(i){if(i<n){ctx.beginPath();ctx.arc(X(i),Y(r.y[i]),4,0,7);ctx.fill()}});
+ var cond=r.hr<60?'Bradycardia':r.hr>100?'Tachycardia':'Normal heart rate',
+ rhy=r.rr.length<3?'Insufficient beats':r.cv>.22?'Atrial fibrillation suspected':r.cv>.09?'Other arrhythmia suspected':'Normal sinus rhythm',
+ prog;
+ if(rhy==='Normal sinus rhythm'&&r.hr>=60&&r.hr<=100)prog='No problem detected';
+ else if(/Atrial|Other/.test(rhy)&&r.hr<60)prog='Consult doctor ASAP';
+ else if(/Atrial|Other/.test(rhy))prog='Doctor review needed';
+ else prog='Heart rate outside normal range: doctor review suggested';
+ var items=[['Rhythm',rhy],['Condition',cond],['Heart rate',fmt(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',fmt(r.m,' s')],['HRV (SDNN)',fmt(r.sd*1000,' ms',0)],['RMSSD',fmt(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',fmt(r.cv*100,'%',0)]];
+ document.getElementById('rpout').innerHTML=items.map(function(a){return '<div class="panel" style="padding:10px 12px"><div style="color:var(--mute);font-size:.8rem">'+a[0]+'</div><div style="font-weight:600">'+a[1]+'</div></div>'}).join('');
+ var adv=document.getElementById('rpadv');adv.textContent='Advice: '+prog+' (research demo, not a medical device)';adv.style.color=prog.indexOf('No problem')===0?'var(--ok)':'var(--coral)'}
+function gen(){sig=synth(document.querySelector('input[name=rp]:checked').value);render()}
+document.getElementById('rpgen').onclick=gen;
+document.querySelectorAll('input[name=rp]').forEach(function(e){e.onchange=gen});
+window.addEventListener('resize',function(){if(sig)render()});
+gen()})();
+(function(){
+var $=function(i){return document.getElementById(i)},cols=[],names=[];
+function msg(t,bad){var m=$('upmsg');m.textContent=t;m.style.color=bad?'var(--coral)':'var(--mute)'}
+function parse(text){
+ var rows=text.split(/\r?\n/).map(function(l){return l.trim().split(/[,;\t ]+/)}).filter(function(r){return r.length&&r[0]!==''});
+ var head=rows.length&&rows[0].some(function(c){return isNaN(parseFloat(c))});
+ names=head?rows.shift():[];var nc=rows.length?rows[0].length:0;cols=[];
+ for(var c=0;c<nc;c++)cols.push(rows.map(function(r){return parseFloat(r[c])}).filter(function(v){return !isNaN(v)}));
+ cols=cols.filter(function(c){return c.length>0});
+ $('upcol').innerHTML=cols.map(function(c,i){return '<option value="'+i+'">'+(names[i]||'Column '+(i+1))+' ('+c.length+')</option>'}).join('');
+ if(cols.length>1)$('upcol').value='1'}
+function load(f){if(!f)return;var r=new FileReader();r.onload=function(){parse(String(r.result));
+ if(!cols.length){msg('No numeric data found in that file.',1);return}msg(f.name+' loaded');run()};r.onerror=function(){msg('Could not read the file.',1)};r.readAsText(f)}
+function run(){
+ if(!cols.length){msg('Load a file first.',1);return}
+ var fs=Math.max(50,Math.min(2000,+$('upfs').value||300)),x=cols[+$('upcol').value||0].slice(0,fs*30);
+ if(x.length<fs*3){msg('Need at least 3 seconds of samples ('+Math.ceil(fs*3)+' at '+fs+' Hz).',1);return}
+ var r=window.ecgAnalyze(x,fs),cv=$('upcv'),ctx=cv.getContext('2d'),w=cv.clientWidth,h=160;cv.style.display='block';
+ cv.width=w*devicePixelRatio;cv.height=h*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+ var st=getComputedStyle(document.documentElement),teal=st.getPropertyValue('--teal'),co=st.getPropertyValue('--coral'),ln=st.getPropertyValue('--grid');
+ ctx.clearRect(0,0,w,h);ctx.strokeStyle=ln;for(var g=0;g<w;g+=30){ctx.beginPath();ctx.moveTo(g,0);ctx.lineTo(g,h);ctx.stroke()}
+ var n=r.y.length,mn=Math.min.apply(null,r.y),mx=Math.max.apply(null,r.y);
+ function X(i){return i/n*w}function Y(v){return h-8-(v-mn)/(mx-mn||1)*(h-16)}
+ ctx.strokeStyle=teal;ctx.lineWidth=1.2;ctx.beginPath();for(var i=0;i<n;i++){i?ctx.lineTo(X(i),Y(r.y[i])):ctx.moveTo(X(i),Y(r.y[i]))}ctx.stroke();
+ ctx.fillStyle=co;r.p.forEach(function(i){ctx.beginPath();ctx.arc(X(i),Y(r.y[i]),3.5,0,7);ctx.fill()});
+ var cond=r.hr<60?'Bradycardia':r.hr>100?'Tachycardia':'Normal heart rate',
+ rhy=r.rr.length<3?'Insufficient beats':r.cv>.22?'Atrial fibrillation suspected':r.cv>.09?'Other arrhythmia suspected':'Normal sinus rhythm',prog;
+ if(rhy==='Insufficient beats')prog='Could not detect enough beats: check the sampling rate, column and signal quality';
+ else if(rhy==='Normal sinus rhythm'&&r.hr>=60&&r.hr<=100)prog='No problem detected';
+ else if(/Atrial|Other/.test(rhy)&&r.hr<60)prog='Consult doctor ASAP';
+ else if(/Atrial|Other/.test(rhy))prog='Doctor review needed';
+ else prog='Heart rate outside normal range: doctor review suggested';
+ function f(v,u,d){return v.toFixed(d)+u}
+ var it=[['Duration',f(x.length/fs,' s',1)],['Rhythm',rhy],['Condition',cond],['Heart rate',f(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',f(r.m,' s',2)],['HRV (SDNN)',f(r.sd*1000,' ms',0)],['RMSSD',f(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',f(r.cv*100,'%',0)]];
+ $('upout').innerHTML=it.map(function(a){return '<div class="panel" style="padding:10px 12px"><div style="color:var(--mute);font-size:.8rem">'+a[0]+'</div><div style="font-weight:600">'+a[1]+'</div></div>'}).join('');
+ var ad=$('upadv');ad.textContent='Advice: '+prog+' (research demo, not a medical device)';ad.style.color=prog.indexOf('No problem')===0?'var(--ok)':'var(--coral)'}
+var z=$('upz');z.onclick=function(){$('upf').click()};z.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();$('upf').click()}};
+$('upf').onchange=function(e){load(e.target.files[0])};
+z.ondragover=function(e){e.preventDefault();z.style.borderColor='var(--teal)'};z.ondragleave=function(){z.style.borderColor='var(--line)'};
+z.ondrop=function(e){e.preventDefault();z.style.borderColor='var(--line)';load(e.dataTransfer.files[0])};
+$('upgo').onclick=run;$('upfs').onchange=function(){if(cols.length)run()};$('upcol').onchange=function(){run()};
+window.addEventListener('resize',function(){if(cols.length&&$('upcv').style.display==='block')run()})})();
+</script>
+</body></html>
