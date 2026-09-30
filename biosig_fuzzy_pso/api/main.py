@@ -55,6 +55,8 @@ from biosig_fuzzy_pso.api.sim_engine import (
     run_automated_tests,
 )
 
+from biosig_fuzzy_pso.api.schemas import Dataset, SignalPayload, SignalStressRequest
+
 logger = logging.getLogger(__name__)
 
 # Base workspace directory
@@ -96,7 +98,7 @@ app = FastAPI(
 # Enable CORS for all local dev & file origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -648,3 +650,51 @@ async def health() -> JSONResponse:
         "particle_dim": len(_BEST_PARTICLE),
         "active_detector": _ACTIVE_PARAMS,
     })
+
+
+# ---------------------------------------------------------------------------
+# Deliverable 2: Frontend Adapter Contract Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/api/v1/dataset", response_model=Dataset, tags=["adapter"])
+async def get_adapter_dataset() -> Any:
+    """GET /api/v1/dataset — Return full Dataset adhering to Frontend Adapter Contract."""
+    dataset_file = WORKSPACE_DIR / "frontend" / "src" / "data" / "dataset.json"
+    if dataset_file.exists():
+        with open(dataset_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+    from export_frontend_data import run_export
+    ds = run_export()
+    return ds.model_dump(by_alias=True)
+
+
+@app.post("/api/v1/signal/stress", response_model=SignalPayload, tags=["adapter"])
+async def post_signal_stress(req: SignalStressRequest) -> Any:
+    """
+    POST /api/v1/signal/stress — Generate and process stress signal payload.
+    Latency bound: p95 < 300 ms for 10 s.
+    """
+    from export_frontend_data import generate_synthetic_ecg, process_signal
+    raw, clean, ref_pks = generate_synthetic_ecg(
+        duration_s=10.0,
+        fs=250,
+        rhythm="NSR",
+        wander_amp_mv=float(req.wander_amp_mv),
+        emg_snr_db=float(req.emg_snr_db),
+        mains=bool(req.mains),
+        seed=int(req.seed),
+    )
+    payload = process_signal(raw, ref_pks, fs=250)
+    return payload.model_dump(by_alias=True)
+
+
+@app.get("/api/v1/health", tags=["adapter"])
+async def api_v1_health() -> JSONResponse:
+    """GET /api/v1/health — Adapter health check."""
+    return JSONResponse({
+        "status": "healthy",
+        "service": "biosig_fuzzy_pso_adapter",
+        "version": "1.0",
+        "algorithm": "PSO",
+    })
+

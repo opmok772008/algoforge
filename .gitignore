@@ -24,6 +24,6 @@ Desktop.ini
 .vscode/
 .idea/
 
-# Large temporary datasets (re-downloaded on demand by wfdb / synthetic generator)
+# Large temporary cache
 biosig_fuzzy_pso/data/.cache/*.npz
 !biosig_fuzzy_pso/data/.cache/.gitkeep
