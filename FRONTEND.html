@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fuzzy-Evolutionary ICU Arrhythmia Pipeline</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Montserrat:wght@600;700&display=swap">
 <style>
 :root{--bg:#1a1a1d;--pan:#26262a;--ink:#f7f4ef;--mute:#b8b1a6;--teal:#ff9900;--coral:#ff5468;--amber:#ffc266;--ok:#8fcf9a;--line:#3d3d43;--grid:#303036;--hero:#0a3a2f;--heroink:#f7f4ef;--herotr:#de6b48;--herop:#cfe0d6;--hg1:rgba(247,244,239,.20);--hg2:rgba(247,244,239,.08);--pritx:#1a1a1d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -13,9 +13,9 @@ html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
 h1,h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;line-height:1.05;margin:0}
-h1{font-size:clamp(2.5rem,6.5vw,4.6rem);max-width:16ch}
-h2{font-size:clamp(1.9rem,4vw,2.6rem);margin-bottom:.5rem}
-h3{font-size:1rem;margin:0 0 .25rem;font-weight:600}
+h1{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.12;font-size:clamp(2rem,5vw,3.6rem);max-width:18ch}
+h2{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.15;font-size:clamp(2.1rem,4.4vw,3rem);margin-bottom:.75rem}
+h3{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1.08rem;margin:0 0 .25rem;font-weight:600}
 p{margin:0 0 1rem;max-width:66ch}
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 .hero{background:var(--hero);color:var(--heroink);padding:26px 0 48px;background-image:linear-gradient(var(--hg1) 1px,transparent 1px),linear-gradient(90deg,var(--hg1) 1px,transparent 1px),linear-gradient(var(--hg2) 1px,transparent 1px),linear-gradient(90deg,var(--hg2) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px}
@@ -83,22 +83,10 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 </head>
 <body>
 <header class="hero"><div class="wrap">
-<nav aria-label="Sections"><a href="#lab">Live lab</a><a href="#ecgrepo">Repo pipeline</a><a href="#upload">Upload</a><a href="#evolve">Evolution</a><a href="#tests">Tests</a><a href="#plan">Design</a><a href="#judging">Criteria</a></nav>
-<div class="strip">
-  <span class="cross" aria-hidden="true"></span>
-  <span>ICU · Bed 04</span>
-  <span>Lead II</span>
-  <span>25 mm/s</span>
-  <span>10 mm/mV</span>
-  <span class="live"><i></i>Monitoring</span>
-  <span id="backendBadge" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;border:1px solid var(--ok);font-size:.76rem;text-transform:none;background:rgba(0,0,0,0.18)">
-    <i id="backendDot" style="width:8px;height:8px;border-radius:50%;background:var(--ok)"></i>
-    <span id="backendStatusText">Checking Backend...</span>
-  </span>
-</div>
+<nav aria-label="Sections"><a href="#lab">Live lab</a><a href="#ecgrepo">Repo pipeline</a><a href="#upload">Upload</a><a href="#evolve">Evolution</a><a href="#tests">Tests</a></nav>
 <h1>Lethal arrhythmias, found through the noise</h1>
-<p style="font-size:1.12rem;margin-top:16px">A fuzzy-evolutionary ICU signal pipeline for ECG arrhythmia detection tuned by Particle Swarm Optimization (PSO). Everything below connects live to the FastAPI backend with seamless browser-fallback computation.</p>
-<svg class="ecgline" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 40 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20"/></svg>
+<p style="font-size:1.12rem;margin-top:16px">A fuzzy-logic pipeline for ICU monitoring whose settings are tuned by an evolutionary algorithm. Everything below runs live in your browser on synthetic ECG, and the numbers come from real computation, not animation.</p>
+<svg class="ecgline" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 40 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20"/></svg>
 </div></header>
 
 <section id="lab"><div class="wrap">
@@ -118,7 +106,7 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 <div class="tr"><canvas id="cRaw" aria-label="Raw ECG trace"></canvas></div>
 <div class="cap"><span>Cleaned, with detected R-peaks</span><span>Filtered at 250 Hz</span></div>
 <div class="tr"><canvas id="cClean" aria-label="Cleaned ECG trace with R-peak markers"></canvas></div>
-<p class="note">Synthetic ECG with known beat times, so accuracy figures are measurable. Supports live FastAPI processing. Not a medical device.</p>
+<p class="note">Synthetic ECG with known beat times, so the accuracy figures on this page are measurable. Not a medical device.</p>
 </div>
 <div class="panel">
 <div id="banner" class="banner" role="status" aria-live="polite">Analyzing</div>
@@ -132,7 +120,13 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 
 <section id="ecgrepo"><div class="wrap">
 <h2>Repo pipeline: RR-feature ECG analyzer</h2>
-<p>ECG feature analyzer (RRfeatures & RealTimeGUI): baseline removal, smoothing, R-peak detection at 0.45 x max, RR intervals, heart rate, HRV, NN50, and condition/advice rules. Signals are processed at 300 Hz on the FastAPI backend with instant browser fallback.</p>
+<ul style="margin:0 0 1rem;padding-left:1.2rem;max-width:66ch">
+<li>Choose a signal type (normal, atrial fibrillation, other rhythm, bradycardia or tachycardia) to generate a fresh 10-second ECG.</li>
+<li>R-peaks are detected automatically and marked as dots on the trace.</li>
+<li>Shows heart rate, average RR interval, HRV (SDNN), RMSSD and NN50.</li>
+<li>Classifies heart rate as bradycardia, normal or tachycardia.</li>
+<li>Labels the rhythm from beat-to-beat irregularity and suggests a next step.</li>
+</ul>
 <div class="panel">
 <div class="ctl" role="radiogroup" aria-label="Signal type">
 <label class="seg"><input type="radio" name="rp" value="N" checked><span>Normal (N)</span></label>
@@ -141,6 +135,7 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 <label class="seg"><input type="radio" name="rp" value="B"><span>Bradycardia</span></label>
 <label class="seg"><input type="radio" name="rp" value="T"><span>Tachycardia</span></label>
 <button id="rpgen" class="pri" type="button">New signal</button>
+
 </div>
 <canvas id="rpcv" height="160" style="height:160px;margin-top:12px" aria-label="ECG with detected R peaks"></canvas>
 <div id="rpout" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px"></div>
@@ -149,7 +144,7 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 
 <section id="upload"><div class="wrap">
 <h2>Upload your ECG</h2>
-<p>Drop a CSV or TXT file with one ECG lead as a column of numbers. The file is analyzed by the backend API or locally in your browser. Set the sampling rate of your recording (PhysioNet standard 300 Hz or 250/360 Hz). The first 30 seconds are analyzed.</p>
+<p>Drop a CSV or TXT file with one ECG lead as a column of numbers. The file is analyzed in your browser and never uploaded anywhere. Set the sampling rate of your recording (PhysioNet 2017 uses 300 Hz). The first 30 seconds are analyzed.</p>
 <div class="panel">
 <div id="upz" tabindex="0" role="button" aria-label="Choose or drop an ECG file" style="border:2px dashed var(--line);border-radius:10px;padding:26px;text-align:center;cursor:pointer">Drop a .csv / .txt file here, or click to choose<input type="file" id="upf" accept=".csv,.txt,.tsv" hidden></div>
 <div class="ctl" style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
@@ -161,10 +156,9 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 <div id="upout" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px"></div>
 <p id="upadv" style="margin:14px 0 0;font-weight:600"></p>
 </div></div></section>
-
 <section id="evolve"><div class="wrap">
 <h2>Evolution lab</h2>
-<p>Particle Swarm / Evolutionary algorithm searches detector settings (baseline window, smoothing, threshold, integration window) on noisy training records. Elitism preserves the best solution each generation.</p>
+<p>A genetic algorithm searches four detector settings (baseline window, smoothing, threshold, integration window) on three noisy training records. Fitness is F1 score minus a penalty for R-peak timing jitter. Elitism keeps the best solution each generation.</p>
 <div class="grid" style="grid-template-columns:1fr 1fr">
 <div class="panel"><div class="ctl"><button class="pri" id="go" type="button">Run evolution</button><button id="apply" type="button" disabled>Apply best to monitor</button></div>
 <div class="tr"><canvas id="cGA" aria-label="Fitness by generation chart" style="height:150px"></canvas></div>
@@ -174,80 +168,14 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 
 <section id="tests"><div class="wrap">
 <h2>Automated test suite</h2>
-<p>Each check is an exact assertion on signals with fixed random seeds, mirroring the hard constraints in the challenge brief. Verified on the Python backend with 100% agreement.</p>
+<p>Each check is a real assertion on generated signals with fixed random seeds, so results repeat exactly. They mirror the hard constraints in the challenge brief.</p>
 <div class="ctl"><button class="pri" id="rt" type="button">Run all tests</button><span id="sum" class="mono" style="font-size:1rem;align-self:center"></span></div>
 <div class="tw"><table><thead><tr><th>Check</th><th>Result</th><th>Measured</th></tr></thead><tbody id="tb"></tbody></table></div>
 </div></section>
 
-<section id="plan"><div class="wrap">
-<h2>How it works</h2>
-<ol class="steps">
-<li><h3>Clean</h3><p>Moving-average / cascaded median baseline removal keeps QRS amplitude intact while removing wander.</p></li>
-<li><h3>Locate</h3><p>Slope-energy detector with an adaptive threshold and refractory period accurately finds R-peaks.</p></li>
-<li><h3>Judge</h3><p>Fuzzy rules weigh rate, regularity, spectral concentration and signal quality into alarm confidence.</p></li>
-<li><h3>Alert</h3><p>Confidence >= 0.6 raises the alarm. High-noise artifact signals are held for clinical review.</p></li></ol>
-<div class="cols" style="margin-top:34px"><div>
-<h3>Hard constraints from the brief</h3>
-<div class="lim"><h3>Speed (C1)</h3><p>Ventricular fibrillation and tachycardia alert within 3 seconds of onset.</p></div>
-<div class="lim"><h3>Safety (C2)</h3><p>Lethal arrhythmia sensitivity is 1.0 (zero lethal missed events).</p></div>
-<div class="lim"><h3>Fidelity (C3)</h3><p>QRS amplitude distortion <= 5% and ST error <= 0.02 mV preserved.</p></div>
-<div class="lim"><h3>Footprint (C4)</h3><p>Preallocated 6 KB ring buffer (peak memory < 2 MB for wearable).</p></div></div>
-<div><h3>Datasets for the Python submission</h3>
-<p style="font-size:.95rem;color:var(--mute)">PhysioNet open databases loaded with wfdb & cached locally:</p>
-<div class="tw"><table><tbody>
-<tr><td>MIT-BIH Arrhythmia (mitdb)</td><td>Rhythms and beat timing</td></tr>
-<tr><td>VFDB & CUDB</td><td>VF and VT acute episodes</td></tr>
-<tr><td>MIT-BIH Noise Stress (nstdb)</td><td>Baseline wander, muscle and motion noise</td></tr>
-<tr><td>CinC 2015</td><td>ICU false alarms benchmark</td></tr></tbody></table></div></div></div>
-</div></section>
-
-<section id="judging"><div class="wrap">
-<h2>Mapped to the evaluation criteria</h2>
-<div class="tw"><table><thead><tr><th>Criterion</th><th>How the project addresses it</th></tr></thead><tbody>
-<tr><td>Testing (18%)</td><td>Seeded assertions on sensitivity, jitter, amplitude, latency, false alarms and memory.</td></tr>
-<tr><td>Problem alignment (12%)</td><td>Each hard constraint (C1–C4) and multi-objective term has a matching test.</td></tr>
-<tr><td>Code quality (20%)</td><td>FastAPI backend with PEP-484 typing, modular DSP, and Sugeno FIS.</td></tr>
-<tr><td>Efficiency (18%)</td><td>Preallocated ring buffers, vectorized NumPy, float32, sub-second latency.</td></tr>
-<tr><td>Security (12%)</td><td>No API keys or external secrets required; runs completely offline or locally.</td></tr>
-<tr><td>Accessibility (10%)</td><td>Keyboard operable, visible focus, contrast compliant, reduced-motion support.</td></tr></tbody></table></div>
-</div></section>
-<footer><div class="wrap">BioSig Fuzzy-PSO ICU Pipeline. Research prototype on synthetic & PhysioNet signals. Not a medical device.</div></footer>
+<footer><div class="wrap">Data sources are cited from PhysioNet. This is a research prototype on synthetic signals and is not a medical device.</div></footer>
 
 <script>
-/* ---------------------------------------------------------------------------
-   Backend Connectivity & Configuration
---------------------------------------------------------------------------- */
-var API_URL = (location.protocol.startsWith('http')) ? location.origin : 'http://127.0.0.1:8000';
-var isBackendOnline = false;
-
-async function checkBackend() {
-  try {
-    var res = await fetch(API_URL + '/health', { cache: 'no-store' });
-    if (res.ok) {
-      var d = await res.json();
-      isBackendOnline = true;
-      var el = document.getElementById('backendStatusText');
-      if (el) el.textContent = 'Backend: Online (Python 3.14 · FastAPI · 74-D PSO)';
-      var badge = document.getElementById('backendBadge');
-      if (badge) badge.style.borderColor = 'var(--ok)';
-      var dot = document.getElementById('backendDot');
-      if (dot) dot.style.background = 'var(--ok)';
-      return true;
-    }
-  } catch (e) {
-    isBackendOnline = false;
-    var el = document.getElementById('backendStatusText');
-    if (el) el.textContent = 'Backend: Standalone Browser Engine';
-    var badge = document.getElementById('backendBadge');
-    if (badge) badge.style.borderColor = 'var(--amber)';
-    var dot = document.getElementById('backendDot');
-    if (dot) dot.style.background = 'var(--amber)';
-  }
-  return false;
-}
-checkBackend();
-setInterval(checkBackend, 5000);
-
 /*CORE*/
 var FS=250,N=1500,WIN=1000,DEF={bw:200,sm:5,th:.3,mw:25};
 function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -346,7 +274,7 @@ var last=0,acc=0;function loop(ts){var dt=Math.min(.1,(ts-last)/1000||0);last=ts
 document.querySelectorAll('input[name="scn"]').forEach(function(e){e.addEventListener("change",function(){mon.set("scn",e.value);if(reduce)adv(6)})});
 document.querySelectorAll("input[data-k]").forEach(function(e){e.addEventListener("change",function(){mon.set(e.dataset.k,e.checked);if(reduce)adv(6)})});
 mon.run(8);render();if(!reduce)requestAnimationFrame(loop);addEventListener("resize",render);
-
+;
 /* evolution */
 var ga=null,hist=[],bestP=null;
 function gaDraw(){var cv=$("cGA");if(!hist.length){draw(cv,[0,0],0,1,cssv("--mute"));return}
@@ -354,107 +282,16 @@ var d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=Math.round
 var lo=Math.min.apply(null,hist.map(function(q){return q.mean}))-.03,hi=1,Y=function(v){return h-8-(v-lo)/(hi-lo)*(h-16)},X=function(i){return 10+i/20*(w-20)};
 [["mean",[5,4],cssv("--mute")],["best",[],cssv("--teal")]].forEach(function(s){x.setLineDash(s[1]);x.strokeStyle=s[2];x.lineWidth=2.2;x.beginPath();hist.forEach(function(q,i){i?x.lineTo(X(i),Y(q[s[0]])):x.moveTo(X(i),Y(q[s[0]]))});x.stroke()});x.setLineDash([])}
 function fp(p){return"bw="+p.bw+" sm="+p.sm+" th="+p.th.toFixed(2)+" mw="+p.mw}
-
-$("go").onclick=async function(){
-  var lg=$("log");lg.classList.add("noscroll");$("go").disabled=true;
-  if(isBackendOnline){
-    try{
-      lg.textContent="Connecting to FastAPI backend optimization...\nStarting PSO / evolutionary swarm on PhysioNet/Sim training records...";
-      var startRes = await fetch(API_URL + '/optimize', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({round: 1, iterations: 20, seed: 42})
-      });
-      if(startRes.ok){
-        var jobData = await startRes.json();
-        var jobId = jobData.job_id;
-        hist = [];
-        var pollInterval = setInterval(async function(){
-          try{
-            var stRes = await fetch(API_URL + '/optimize/' + jobId);
-            if(stRes.ok){
-              var stData = await stRes.json();
-              if(stData.convergence && stData.convergence.length){
-                hist = stData.convergence.map(function(c){return {best: c.gbest, mean: c.mean}});
-                gaDraw();
-                var lastC = stData.convergence[stData.convergence.length - 1];
-                var pStr = lastC.params ? fp(lastC.params) : "";
-                lg.textContent = "Backend Optimization Job ID: " + jobId.slice(0,8) + "\n" +
-                  stData.convergence.map(function(c){
-                    return "gen " + (c.iter < 10 ? "0" : "") + c.iter + "  gbest " + c.gbest.toFixed(3) + "  " + (c.params ? fp(c.params) : "");
-                  }).join("\n");
-                lg.scrollTop = lg.scrollHeight;
-              }
-              if(stData.status === "done"){
-                clearInterval(pollInterval);
-                bestP = stData.best_params;
-                lg.textContent += "\n\nOptimization complete! Evolved parameters tuned for noisy ICU baseline wander and EMG bursts.";
-                $("go").disabled = false;
-                $("apply").disabled = false;
-                lg.scrollTop = lg.scrollHeight;
-              } else if(stData.status && stData.status.startsWith("error")){
-                clearInterval(pollInterval);
-                lg.textContent += "\nError: " + stData.status;
-                $("go").disabled = false;
-              }
-            }
-          }catch(pollErr){
-            console.warn("Poll error", pollErr);
-          }
-        }, 120);
-        return;
-      }
-    }catch(err){
-      console.warn("Backend optimization failed, using browser GA:", err);
-    }
-  }
-  // Client GA fallback
-  ga=new GA(3);hist=[{best:ga.best.f,mean:ga.mean}];lg.textContent="Attempt 1 (default settings) fitness "+fitness(DEF).toFixed(3)+"\ngen 00  best "+ga.best.f.toFixed(3)+"  "+fp(ga.best);gaDraw();
-  (function tick(){if(ga.g>=20){bestP=ga.best;var f=fitness(DEF);lg.textContent+="\nAttempt 2 note: evolved settings raised fitness from "+f.toFixed(3)+" to "+ga.best.f.toFixed(3)+" by re-balancing threshold and smoothing against noisy records.";$("go").disabled=false;$("apply").disabled=false;lg.scrollTop=lg.scrollHeight;return}
-  var pb=ga.best.f;ga.step();hist.push({best:ga.best.f,mean:ga.mean});lg.textContent+="\ngen "+(ga.g<10?"0":"")+ga.g+"  best "+ga.best.f.toFixed(3)+" ("+(ga.best.f>=pb?"+":"")+(ga.best.f-pb).toFixed(3)+")  "+fp(ga.best);lg.scrollTop=lg.scrollHeight;gaDraw();setTimeout(tick,reduce?0:70)})()
-};
-
-$("apply").onclick=async function(){
-  mon.p={bw:bestP.bw,sm:bestP.sm,th:bestP.th,mw:bestP.mw};
-  if(isBackendOnline){
-    try{
-      await fetch(API_URL + '/params', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(mon.p)
-      });
-    }catch(e){}
-  }
-  $("log").textContent+="\nApplied to live monitor: "+fp(mon.p);if(reduce)adv(4)
-};
+$("go").onclick=function(){var lg=$("log");lg.classList.add("noscroll");ga=new GA(3);hist=[{best:ga.best.f,mean:ga.mean}];lg.textContent="Attempt 1 (default settings) fitness "+fitness(DEF).toFixed(3)+"\ngen 00  best "+ga.best.f.toFixed(3)+"  "+fp(ga.best);gaDraw();$("go").disabled=true;
+(function tick(){if(ga.g>=20){bestP=ga.best;var f=fitness(DEF);lg.textContent+="\nAttempt 2 note: evolved settings raised fitness from "+f.toFixed(3)+" to "+ga.best.f.toFixed(3)+" by re-balancing threshold and smoothing against noisy records.";$("go").disabled=false;$("apply").disabled=false;lg.scrollTop=lg.scrollHeight;return}
+var pb=ga.best.f;ga.step();hist.push({best:ga.best.f,mean:ga.mean});lg.textContent+="\ngen "+(ga.g<10?"0":"")+ga.g+"  best "+ga.best.f.toFixed(3)+" ("+(ga.best.f>=pb?"+":"")+(ga.best.f-pb).toFixed(3)+")  "+fp(ga.best);lg.scrollTop=lg.scrollHeight;gaDraw();setTimeout(tick,reduce?0:70)})()};
+$("apply").onclick=function(){mon.p={bw:bestP.bw,sm:bestP.sm,th:bestP.th,mw:bestP.mw};$("log").textContent+="\nApplied to live monitor: "+fp(mon.p);if(reduce)adv(4)};
 gaDraw();
-
 /* tests */
-async function tests(){
-  var tb = $("tb"), sum = $("sum");
-  sum.textContent = "Running tests...";
-  if(isBackendOnline){
-    try{
-      var res = await fetch(API_URL + '/tests', { method: 'POST' });
-      if(res.ok){
-        var data = await res.json();
-        tb.innerHTML = data.tests.map(function(r){
-          return "<tr><td>"+r.name+'</td><td class="'+(r.ok?"pass":"fail")+'">'+(r.ok?"Pass":"Fail")+"</td><td>"+r.val+"</td></tr>";
-        }).join("");
-        sum.textContent = data.passed + " / " + data.total + " passed (Backend Verified)";
-        return;
-      }
-    }catch(e){
-      console.warn("Backend tests fallback:", e);
-    }
-  }
-  var R=runTests(),ok=R.filter(function(r){return r.ok}).length;
-  tb.innerHTML=R.map(function(r){return"<tr><td>"+r.name+'</td><td class="'+(r.ok?"pass":"fail")+'">'+(r.ok?"Pass":"Fail")+"</td><td>"+r.val+"</td></tr>'}).join("");$("sum").textContent=ok+" / "+R.length+" passed"
-}
+function tests(){var R=runTests(),ok=R.filter(function(r){return r.ok}).length;
+$("tb").innerHTML=R.map(function(r){return"<tr><td>"+r.name+'</td><td class="'+(r.ok?"pass":"fail")+'">'+(r.ok?"Pass":"Fail")+"</td><td>"+r.val+"</td></tr>"}).join("");$("sum").textContent=ok+" / "+R.length+" passed"}
 $("rt").onclick=tests;setTimeout(tests,50);
 })();
-
-/* Repo Pipeline section */
 (function(){
 var FS=300,cv=document.getElementById('rpcv'),ctx=cv.getContext('2d'),sig=null,pk=[];
 function rnd(){return Math.random()}
@@ -486,36 +323,8 @@ function analyze(x,fs){fs=fs||FS;
  return {p:p,y:h,rr:rr,hr:hr,m:m,sd:sd,rms:rms,nn50:nn50,cv:cv}}
 window.ecgAnalyze=analyze;
 function fmt(v,u,d){return v.toFixed(d===undefined?2:d)+(u||'')}
-async function render(){
- var r;
- if(isBackendOnline && sig && sig.length){
-   try{
-     var res = await fetch(API_URL + '/analyze', {
-       method: 'POST',
-       headers: {'Content-Type': 'application/json'},
-       body: JSON.stringify({samples: Array.from(sig), fs: FS})
-     });
-     if(res.ok){
-       var bData = await res.json();
-       r = {
-         p: bData.p,
-         y: bData.y,
-         rr: bData.rr,
-         hr: bData.hr,
-         m: bData.m,
-         sd: bData.sd,
-         rms: bData.rms,
-         nn50: bData.nn50,
-         cv: bData.cv,
-         items: bData.items,
-         advice: bData.advice,
-         prog: bData.prog
-       };
-     }
-   }catch(e){}
- }
- if(!r) r=analyze(sig);
- pk=r.p;var w=cv.clientWidth,h=160;cv.width=w*devicePixelRatio;cv.height=h*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+function render(){
+ var r=analyze(sig);pk=r.p;var w=cv.clientWidth,h=160;cv.width=w*devicePixelRatio;cv.height=h*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
  var st=getComputedStyle(document.documentElement),ink=st.getPropertyValue('--ink'),teal=st.getPropertyValue('--teal'),co=st.getPropertyValue('--coral'),ln=st.getPropertyValue('--grid');
  ctx.clearRect(0,0,w,h);ctx.strokeStyle=ln;for(var g=0;g<w;g+=30){ctx.beginPath();ctx.moveTo(g,0);ctx.lineTo(g,h);ctx.stroke()}
  var n=Math.min(sig.length,FS*10),mn=Math.min.apply(null,r.y),mx=Math.max.apply(null,r.y);
@@ -525,12 +334,11 @@ async function render(){
  var cond=r.hr<60?'Bradycardia':r.hr>100?'Tachycardia':'Normal heart rate',
  rhy=r.rr.length<3?'Insufficient beats':r.cv>.22?'Atrial fibrillation suspected':r.cv>.09?'Other arrhythmia suspected':'Normal sinus rhythm',
  prog;
- if(r.prog) prog = r.prog;
- else if(rhy==='Normal sinus rhythm'&&r.hr>=60&&r.hr<=100)prog='No problem detected';
+ if(rhy==='Normal sinus rhythm'&&r.hr>=60&&r.hr<=100)prog='No problem detected';
  else if(/Atrial|Other/.test(rhy)&&r.hr<60)prog='Consult doctor ASAP';
  else if(/Atrial|Other/.test(rhy))prog='Doctor review needed';
  else prog='Heart rate outside normal range: doctor review suggested';
- var items=r.items||[['Rhythm',rhy],['Condition',cond],['Heart rate',fmt(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',fmt(r.m,' s')],['HRV (SDNN)',fmt(r.sd*1000,' ms',0)],['RMSSD',fmt(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',fmt(r.cv*100,'%',0)]];
+ var items=[['Rhythm',rhy],['Condition',cond],['Heart rate',fmt(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',fmt(r.m,' s')],['HRV (SDNN)',fmt(r.sd*1000,' ms',0)],['RMSSD',fmt(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',fmt(r.cv*100,'%',0)]];
  document.getElementById('rpout').innerHTML=items.map(function(a){return '<div class="panel" style="padding:10px 12px"><div style="color:var(--mute);font-size:.8rem">'+a[0]+'</div><div style="font-weight:600">'+a[1]+'</div></div>'}).join('');
  var adv=document.getElementById('rpadv');adv.textContent='Advice: '+prog+' (research demo, not a medical device)';adv.style.color=prog.indexOf('No problem')===0?'var(--ok)':'var(--coral)'}
 function gen(){sig=synth(document.querySelector('input[name=rp]:checked').value);render()}
@@ -538,8 +346,6 @@ document.getElementById('rpgen').onclick=gen;
 document.querySelectorAll('input[name=rp]').forEach(function(e){e.onchange=gen});
 window.addEventListener('resize',function(){if(sig)render()});
 gen()})();
-
-/* Upload ECG section */
 (function(){
 var $=function(i){return document.getElementById(i)},cols=[],names=[];
 function msg(t,bad){var m=$('upmsg');m.textContent=t;m.style.color=bad?'var(--coral)':'var(--mute)'}
@@ -553,38 +359,11 @@ function parse(text){
  if(cols.length>1)$('upcol').value='1'}
 function load(f){if(!f)return;var r=new FileReader();r.onload=function(){parse(String(r.result));
  if(!cols.length){msg('No numeric data found in that file.',1);return}msg(f.name+' loaded');run()};r.onerror=function(){msg('Could not read the file.',1)};r.readAsText(f)}
-async function run(){
+function run(){
  if(!cols.length){msg('Load a file first.',1);return}
  var fs=Math.max(50,Math.min(2000,+$('upfs').value||300)),x=cols[+$('upcol').value||0].slice(0,fs*30);
  if(x.length<fs*3){msg('Need at least 3 seconds of samples ('+Math.ceil(fs*3)+' at '+fs+' Hz).',1);return}
- var r;
- if(isBackendOnline){
-   try{
-     var bRes = await fetch(API_URL + '/analyze', {
-       method: 'POST',
-       headers: {'Content-Type': 'application/json'},
-       body: JSON.stringify({samples: Array.from(x), fs: fs})
-     });
-     if(bRes.ok){
-       var bData = await bRes.json();
-       r = {
-         p: bData.p,
-         y: bData.y,
-         rr: bData.rr,
-         hr: bData.hr,
-         m: bData.m,
-         sd: bData.sd,
-         rms: bData.rms,
-         nn50: bData.nn50,
-         cv: bData.cv,
-         items: bData.items,
-         prog: bData.prog
-       };
-     }
-   }catch(e){}
- }
- if(!r) r=window.ecgAnalyze(x,fs);
- var cv=$('upcv'),ctx=cv.getContext('2d'),w=cv.clientWidth,h=160;cv.style.display='block';
+ var r=window.ecgAnalyze(x,fs),cv=$('upcv'),ctx=cv.getContext('2d'),w=cv.clientWidth,h=160;cv.style.display='block';
  cv.width=w*devicePixelRatio;cv.height=h*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
  var st=getComputedStyle(document.documentElement),teal=st.getPropertyValue('--teal'),co=st.getPropertyValue('--coral'),ln=st.getPropertyValue('--grid');
  ctx.clearRect(0,0,w,h);ctx.strokeStyle=ln;for(var g=0;g<w;g+=30){ctx.beginPath();ctx.moveTo(g,0);ctx.lineTo(g,h);ctx.stroke()}
@@ -594,14 +373,13 @@ async function run(){
  ctx.fillStyle=co;r.p.forEach(function(i){ctx.beginPath();ctx.arc(X(i),Y(r.y[i]),3.5,0,7);ctx.fill()});
  var cond=r.hr<60?'Bradycardia':r.hr>100?'Tachycardia':'Normal heart rate',
  rhy=r.rr.length<3?'Insufficient beats':r.cv>.22?'Atrial fibrillation suspected':r.cv>.09?'Other arrhythmia suspected':'Normal sinus rhythm',prog;
- if(r.prog) prog = r.prog;
- else if(rhy==='Insufficient beats')prog='Could not detect enough beats: check the sampling rate, column and signal quality';
+ if(rhy==='Insufficient beats')prog='Could not detect enough beats: check the sampling rate, column and signal quality';
  else if(rhy==='Normal sinus rhythm'&&r.hr>=60&&r.hr<=100)prog='No problem detected';
  else if(/Atrial|Other/.test(rhy)&&r.hr<60)prog='Consult doctor ASAP';
  else if(/Atrial|Other/.test(rhy))prog='Doctor review needed';
  else prog='Heart rate outside normal range: doctor review suggested';
  function f(v,u,d){return v.toFixed(d)+u}
- var it=r.items||[['Duration',f(x.length/fs,' s',1)],['Rhythm',rhy],['Condition',cond],['Heart rate',f(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',f(r.m,' s',2)],['HRV (SDNN)',f(r.sd*1000,' ms',0)],['RMSSD',f(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',f(r.cv*100,'%',0)]];
+ var it=[['Duration',f(x.length/fs,' s',1)],['Rhythm',rhy],['Condition',cond],['Heart rate',f(r.hr,' bpm',0)],['R peaks',r.p.length],['Avg RR',f(r.m,' s',2)],['HRV (SDNN)',f(r.sd*1000,' ms',0)],['RMSSD',f(r.rms*1000,' ms',0)],['NN50',r.nn50],['RR variation',f(r.cv*100,'%',0)]];
  $('upout').innerHTML=it.map(function(a){return '<div class="panel" style="padding:10px 12px"><div style="color:var(--mute);font-size:.8rem">'+a[0]+'</div><div style="font-weight:600">'+a[1]+'</div></div>'}).join('');
  var ad=$('upadv');ad.textContent='Advice: '+prog+' (research demo, not a medical device)';ad.style.color=prog.indexOf('No problem')===0?'var(--ok)':'var(--coral)'}
 var z=$('upz');z.onclick=function(){$('upf').click()};z.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();$('upf').click()}};
