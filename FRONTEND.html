@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fuzzy-Evolutionary ICU Arrhythmia Pipeline</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Montserrat:wght@600;700&display=swap">
 <style>
 :root{--bg:#1a1a1d;--pan:#26262a;--ink:#f7f4ef;--mute:#b8b1a6;--teal:#ff9900;--coral:#ff5468;--amber:#ffc266;--ok:#8fcf9a;--line:#3d3d43;--grid:#303036;--hero:#0a3a2f;--heroink:#f7f4ef;--herotr:#de6b48;--herop:#cfe0d6;--hg1:rgba(247,244,239,.20);--hg2:rgba(247,244,239,.08);--pritx:#1a1a1d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -13,9 +13,9 @@ html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
 h1,h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;line-height:1.05;margin:0}
-h1{font-size:clamp(2.5rem,6.5vw,4.6rem);max-width:16ch}
-h2{font-size:clamp(1.9rem,4vw,2.6rem);margin-bottom:.5rem}
-h3{font-size:1rem;margin:0 0 .25rem;font-weight:600}
+h1{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.12;font-size:clamp(2rem,5vw,3.6rem);max-width:18ch}
+h2{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;line-height:1.15;font-size:clamp(2.1rem,4.4vw,3rem);margin-bottom:.75rem}
+h3{font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1.08rem;margin:0 0 .25rem;font-weight:600}
 p{margin:0 0 1rem;max-width:66ch}
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 .hero{background:var(--hero);color:var(--heroink);padding:26px 0 48px;background-image:linear-gradient(var(--hg1) 1px,transparent 1px),linear-gradient(90deg,var(--hg1) 1px,transparent 1px),linear-gradient(var(--hg2) 1px,transparent 1px),linear-gradient(90deg,var(--hg2) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px}
@@ -83,7 +83,7 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 </head>
 <body>
 <header class="hero"><div class="wrap">
-<nav aria-label="Sections"><a href="#lab">Live lab</a><a href="#ecgrepo">Repo pipeline</a><a href="#upload">Upload</a><a href="#evolve">Evolution</a><a href="#tests">Tests</a><a href="#plan">Design</a><a href="#judging">Criteria</a></nav>
+<nav aria-label="Sections"><a href="#lab">Live lab</a><a href="#ecgrepo">Repo pipeline</a><a href="#upload">Upload</a><a href="#evolve">Evolution</a><a href="#tests">Tests</a></nav>
 <h1>Lethal arrhythmias, found through the noise</h1>
 <p style="font-size:1.12rem;margin-top:16px">A fuzzy-logic pipeline for ICU monitoring whose settings are tuned by an evolutionary algorithm. Everything below runs live in your browser on synthetic ECG, and the numbers come from real computation, not animation.</p>
 <svg class="ecgline" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 40 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20 h20 q10 -12 20 0 h10 l6 6 l8 -38 l8 44 l6 -12 h24 q14 -16 28 0 h20"/></svg>
@@ -173,39 +173,6 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 <div class="tw"><table><thead><tr><th>Check</th><th>Result</th><th>Measured</th></tr></thead><tbody id="tb"></tbody></table></div>
 </div></section>
 
-<section id="plan"><div class="wrap">
-<h2>How it works</h2>
-<ol class="steps">
-<li><h3>Clean</h3><p>Moving-average baseline removal keeps QRS amplitude close to true while removing wander.</p></li>
-<li><h3>Locate</h3><p>Slope-energy detector with an adaptive threshold and a 200 ms refractory period finds R-peaks.</p></li>
-<li><h3>Judge</h3><p>Fuzzy rules weigh rate, regularity and signal quality into an alarm confidence.</p></li>
-<li><h3>Alert</h3><p>Confidence of 0.6 or more raises the alarm. Noise-like input is held for review instead.</p></li></ol>
-<div class="cols" style="margin-top:34px"><div>
-<h3>Hard constraints from the brief</h3>
-<div class="lim"><h3>Speed</h3><p>Ventricular fibrillation and tachycardia alert within 3 seconds.</p></div>
-<div class="lim"><h3>Safety</h3><p>False-alarm suppression must not silence acute events.</p></div>
-<div class="lim"><h3>Fidelity</h3><p>QRS amplitude and ST elevation are preserved by the filters.</p></div>
-<div class="lim"><h3>Footprint</h3><p>A fixed 6 KB streaming buffer suits wearable hardware.</p></div></div>
-<div><h3>Datasets for the Python submission</h3>
-<p style="font-size:.95rem;color:var(--mute)">All open access on PhysioNet, loaded with wfdb. Data is downloaded by script and never committed.</p>
-<div class="tw"><table><tbody>
-<tr><td>MIT-BIH Arrhythmia</td><td>Rhythms and beat timing</td></tr>
-<tr><td>VFDB and CUDB</td><td>VF and VT episodes</td></tr>
-<tr><td>MIT-BIH Noise Stress Test</td><td>Real wander, muscle and motion noise</td></tr>
-<tr><td>BUT QDB</td><td>Signal quality validation, held out</td></tr>
-<tr><td>CinC 2015</td><td>ICU false alarms (optional)</td></tr></tbody></table></div></div></div>
-</div></section>
-
-<section id="judging"><div class="wrap">
-<h2>Mapped to the evaluation criteria</h2>
-<div class="tw"><table><thead><tr><th>Criterion</th><th>How the project addresses it</th></tr></thead><tbody>
-<tr><td>Testing (18%)</td><td>Seeded assertions on sensitivity, jitter, amplitude, latency, false alarms and memory, shown above.</td></tr>
-<tr><td>Problem alignment (12%)</td><td>Each hard constraint and optimization objective in the brief has a matching test or fitness term.</td></tr>
-<tr><td>Code quality (20%)</td><td>Small modules with PEP-484 type hints in the Python submission.</td></tr>
-<tr><td>Efficiency (18%)</td><td>Fixed-size windows, linear-time filters, and this live demo.</td></tr>
-<tr><td>Security (12%)</td><td>No API keys or secrets in source, and no network calls in this page.</td></tr>
-<tr><td>Accessibility (10%)</td><td>Keyboard operable, visible focus, light and dark themes, reduced-motion support, documented walkthrough.</td></tr></tbody></table></div>
-</div></section>
 <footer><div class="wrap">Data sources are cited from PhysioNet. This is a research prototype on synthetic signals and is not a medical device.</div></footer>
 
 <script>
