@@ -185,6 +185,7 @@ class ClassifyResponse(BaseModel):
 
 
 @app.post("/classify", response_model=ClassifyResponse, tags=["inference"])
+@app.post("/api/classify", response_model=ClassifyResponse, tags=["inference"])
 async def classify(req: ClassifyRequest) -> ClassifyResponse:
     """Classify an ECG segment with full diagnostic and fuzzy membership breakdown."""
     t0 = time.perf_counter()
@@ -382,6 +383,7 @@ class AnalyzeRequest(BaseModel):
 
 
 @app.post("/analyze", tags=["analysis"])
+@app.post("/api/analyze", tags=["analysis"])
 async def analyze_ecg(req: AnalyzeRequest) -> JSONResponse:
     """Analyze an uploaded ECG record or synthetic sample (RR intervals, HRV, condition & advice)."""
     if not req.samples:
@@ -397,6 +399,8 @@ async def analyze_ecg(req: AnalyzeRequest) -> JSONResponse:
 
 @app.get("/tests", tags=["evaluation"])
 @app.post("/tests", tags=["evaluation"])
+@app.get("/api/tests", tags=["evaluation"])
+@app.post("/api/tests", tags=["evaluation"])
 async def run_tests_endpoint() -> JSONResponse:
     """Run the 9-check automated verification suite directly on the backend."""
     res = run_automated_tests()
@@ -418,6 +422,7 @@ class SimulateRequest(BaseModel):
 
 
 @app.post("/simulate", tags=["simulation"])
+@app.post("/api/simulate", tags=["simulation"])
 async def simulate_ecg(req: SimulateRequest) -> JSONResponse:
     """Generate synthetic ECG samples for testing."""
     sim = Sim(req.seed)
@@ -445,6 +450,7 @@ class ParamsRequest(BaseModel):
 
 
 @app.get("/params", tags=["configuration"])
+@app.get("/api/params", tags=["configuration"])
 async def get_params() -> JSONResponse:
     """Get active detector & FIS parameters."""
     return JSONResponse({
@@ -460,6 +466,7 @@ async def get_params() -> JSONResponse:
 
 
 @app.post("/params", tags=["configuration"])
+@app.post("/api/params", tags=["configuration"])
 async def update_params(req: ParamsRequest) -> JSONResponse:
     """Update active detector or PSO particle parameters."""
     global _ACTIVE_PARAMS, _BEST_PARTICLE
@@ -491,6 +498,7 @@ class OptimizeRequest(BaseModel):
 
 
 @app.post("/optimize", tags=["optimization"])
+@app.post("/api/optimize", tags=["optimization"])
 async def start_optimize(
     req: OptimizeRequest,
     background_tasks: BackgroundTasks,
@@ -640,6 +648,7 @@ async def get_metrics(job_id: str) -> JSONResponse:
 # ---------------------------------------------------------------------------
 
 @app.get("/health", tags=["utility"])
+@app.get("/api/health", tags=["utility"])
 async def health() -> JSONResponse:
     return JSONResponse({
         "status": "ok",
