@@ -120,7 +120,13 @@ footer{padding:30px 0 46px;color:var(--mute);font-size:.88rem}
 
 <section id="ecgrepo"><div class="wrap">
 <h2>Repo pipeline: RR-feature ECG analyzer</h2>
-<p>A JavaScript port of the logic in <a href="https://github.com/arkanivasarkar/ECG-Anomaly-Detection-Using-Deep-Learning" style="color:var(--teal)">ECG-Anomaly-Detection-Using-Deep-Learning</a> (RRfeatures.m and RealTimeGUI.m): baseline removal, smoothing, R-peak detection at 0.45 x max, RR intervals, heart rate, HRV, NN50, then the GUI's heart-rate condition and advice rules. The repo ships no data, so signals are synthetic at 300 Hz (the PhysioNet 2017 rate); to analyze your own recording, use the upload section below. The rhythm label comes from an RR-irregularity rule, not the repo's trained GRU/LSTM ensemble.</p>
+<ul style="margin:0 0 1rem;padding-left:1.2rem;max-width:66ch">
+<li>Choose a signal type (normal, atrial fibrillation, other rhythm, bradycardia or tachycardia) to generate a fresh 10-second ECG.</li>
+<li>R-peaks are detected automatically and marked as dots on the trace.</li>
+<li>Shows heart rate, average RR interval, HRV (SDNN), RMSSD and NN50.</li>
+<li>Classifies heart rate as bradycardia, normal or tachycardia.</li>
+<li>Labels the rhythm from beat-to-beat irregularity and suggests a next step.</li>
+</ul>
 <div class="panel">
 <div class="ctl" role="radiogroup" aria-label="Signal type">
 <label class="seg"><input type="radio" name="rp" value="N" checked><span>Normal (N)</span></label>
